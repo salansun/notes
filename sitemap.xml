@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://ioliu.cn/404.html</loc>
+    
+    <lastmod>2016-04-12T06:55:32.711Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://ioliu.cn/2013/preferences-sublime/</loc>
     
     <lastmod>2016-04-12T02:44:28.309Z</lastmod>
@@ -9,14 +16,14 @@
   </url>
   
   <url>
-    <loc>https://ioliu.cn/tags/index.html</loc>
+    <loc>https://ioliu.cn/categories/index.html</loc>
     
     <lastmod>2016-04-12T02:17:51.427Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://ioliu.cn/categories/index.html</loc>
+    <loc>https://ioliu.cn/tags/index.html</loc>
     
     <lastmod>2016-04-12T02:17:51.427Z</lastmod>
     
@@ -37,7 +44,7 @@
   </url>
   
   <url>
-    <loc>https://ioliu.cn/2015/hexo-your-blog/</loc>
+    <loc>https://ioliu.cn/2015/html-meta/</loc>
     
     <lastmod>2016-04-12T02:17:51.396Z</lastmod>
     
@@ -51,7 +58,7 @@
   </url>
   
   <url>
-    <loc>https://ioliu.cn/2015/html-meta/</loc>
+    <loc>https://ioliu.cn/2015/hexo-your-blog/</loc>
     
     <lastmod>2016-04-12T02:17:51.396Z</lastmod>
     
@@ -82,13 +89,6 @@
     <loc>https://ioliu.cn/2015/about-javascript-spcial-technique/</loc>
     
     <lastmod>2016-04-12T02:17:51.342Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://ioliu.cn/404.html</loc>
-    
-    <lastmod>2016-04-12T02:17:51.326Z</lastmod>
     
   </url>
   
