@@ -1,0 +1,814 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="http://fonts.useso.com//css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="GitHub,SSH Key,免密码," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="云淡风轻的博客" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="之前上传文件到 GitHub 的时候，一直都是用的账号密码登录，每次提交都弹个窗体出来，感觉烦死了。。。今天有空，就来捣鼓下 SSH Key。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="生成 SSH Key 免密码提交 GitHub">
+<meta property="og:url" content="https://ioliu.cn/2015/generating-ssh-key/index.html">
+<meta property="og:site_name" content="云淡风轻的博客">
+<meta property="og:description" content="之前上传文件到 GitHub 的时候，一直都是用的账号密码登录，每次提交都弹个窗体出来，感觉烦死了。。。今天有空，就来捣鼓下 SSH Key。">
+<meta property="og:updated_time" content="2016-04-12T02:17:51.373Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="生成 SSH Key 免密码提交 GitHub">
+<meta name="twitter:description" content="之前上传文件到 GitHub 的时候，一直都是用的账号密码登录，每次提交都弹个窗体出来，感觉烦死了。。。今天有空，就来捣鼓下 SSH Key。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 生成 SSH Key 免密码提交 GitHub | 云淡风轻的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-61934506-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?9cab9232535f34b793312a5204874e45";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">云淡风轻的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">一个安静的角落</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/notes" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                生成 SSH Key 免密码提交 GitHub
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-12-13T10:19:18+08:00" content="2015-12-13">
+              2015-12-13
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/GitHub/" itemprop="url" rel="index">
+                    <span itemprop="name">GitHub</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/generating-ssh-key/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/generating-ssh-key/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2015/generating-ssh-key/" class="leancloud_visitors" data-flag-title="生成 SSH Key 免密码提交 GitHub">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前上传文件到 GitHub 的时候，一直都是用的账号密码登录，每次提交都弹个窗体出来，感觉烦死了。。。今天有空，就来捣鼓下 <code>SSH Key</code>。</p>
+<a id="more"></a>
+<h3 id="Step1-检查是否已经存在-SSH-Key"><a href="#Step1-检查是否已经存在-SSH-Key" class="headerlink" title="Step1. 检查是否已经存在 SSH Key"></a>Step1. 检查是否已经存在 SSH Key</h3><p>运行 <code>Git Bush</code> 客户端，执行以下代码：<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ls -al ~/.ssh </span><br><span class="line"><span class="meta"># 如果存在，将会列出.ssh 目录下的所有文件</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># 如果不存在则会给出如下提示</span></span><br><span class="line"><span class="symbol">ls:</span> cannot open directory /Users<span class="meta-keyword">/you/</span>.ssh: Permission denied</span><br></pre></td></tr></table></figure>
+<p>检查列出来的目录，看看是否已经有了一个 <code>SSH Key</code>。默认情况下，key 的文件名是下列之一： </p>
+<pre><code>&gt; id_dsa.pub 
+&gt; id_ecdsa.pub 
+&gt; id_ed25519.pub 
+&gt; id_rsa.pub 
+</code></pre><blockquote>
+<p>如果已经存在(如 <code>id_rsa</code> 和 <code>id_rsa.pub</code>)而且你想使用已经存在的密钥对直接连接 GitHub ，那么可以跳过 <strong>Step2</strong>，直接进入 <strong>Step3</strong> </p>
+</blockquote>
+<h3 id="Step2-生成-SSH-Key"><a href="#Step2-生成-SSH-Key" class="headerlink" title="Step2. 生成 SSH Key"></a>Step2. 生成 SSH Key</h3><p>复制下面的代码(<code>记得请将email修改成自己的email地址</code>)：<br><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ssh<span class="attr">-keygen</span> <span class="attr">-t</span> rsa <span class="attr">-b</span> <span class="number">4096</span> <span class="attr">-C</span> <span class="string">"your_name@example.com"</span> </span><br><span class="line">Generating <span class="keyword">public</span>/<span class="keyword">private</span> rsa key <span class="built_in">pair</span>.</span><br></pre></td></tr></table></figure></p>
+<p>这里 GitHub 的建议是保持默认，所以只需要按 <code>Enter</code> 继续：<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Enter <span class="built_in">file</span> <span class="keyword">in</span> which <span class="built_in">to</span> save <span class="keyword">the</span> key (/Users/you/.ssh/id_rsa): [Press Enter]</span><br></pre></td></tr></table></figure></p>
+<p>如果存在，将会提示是否覆盖：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/Users/y</span>ou<span class="regexp">/.ssh/i</span>d_rsa already exists.</span><br><span class="line">Overwrite (y<span class="regexp">/n)?</span></span><br></pre></td></tr></table></figure></p>
+<p>继续后会提示输入密码：<br><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Enter passphrase (<span class="keyword">empty</span> <span class="keyword">for</span> no passphrase): [<span class="keyword">Type</span> a passphrase]</span><br><span class="line">Enter same passphrase again: [<span class="keyword">Type</span> passphrase again]</span><br></pre></td></tr></table></figure></p>
+<p>然后你就会得到你的 <code>SSH Key</code> 的指纹，看起来像下面的代码：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Your identification has been saved <span class="keyword">in</span> <span class="regexp">/Users/</span>you<span class="regexp">/.ssh/</span>id_rsa.</span><br><span class="line">Your <span class="keyword">public</span> key has been saved <span class="keyword">in</span> <span class="regexp">/Users/</span>you<span class="regexp">/.ssh/</span>id_rsa.pub.</span><br><span class="line">The key fingerprint <span class="string">is:</span></span><br><span class="line"><span class="number">01</span>:<span class="number">0</span><span class="string">f:</span><span class="string">f4:</span><span class="number">3</span><span class="string">b:</span><span class="string">ca:</span><span class="number">85</span>:<span class="string">d6:</span><span class="number">17</span>:<span class="string">a1:</span><span class="number">7</span><span class="string">d:</span><span class="string">f0:</span><span class="number">68</span>:<span class="number">9</span><span class="string">d:</span><span class="string">f0:</span><span class="string">a2:</span>db your_email<span class="meta">@example</span>.com</span><br></pre></td></tr></table></figure></p>
+<h3 id="Step3-添加-SSH-Key-到-GitHub"><a href="#Step3-添加-SSH-Key-到-GitHub" class="headerlink" title="Step3. 添加 SSH Key 到 GitHub"></a>Step3. 添加 SSH Key 到 GitHub</h3><p>先拷贝 <code>id_rsa.pub</code> 文件的内容，可以用编辑器打开然后复制，也可以用 git 命令复制：<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>clip &lt; ~<span class="regexp">/.ssh/id</span>_rsa.pub</span><br></pre></td></tr></table></figure></p>
+<p>进入 GitHub <a href="https://GitHub.com/settings" target="_blank" rel="external">账户设置</a>，点击左边 <a href="https://GitHub.com/settings/ssh" target="_blank" rel="external">SSH Key</a> ，点击 <code>Add SSH key</code> ，粘贴刚刚复制的内容，然后保存。<br>输入 GitHub 账户的密码就能看到刚刚添加的 SSH Key 了。 </p>
+<h3 id="Step4-测试是否添加成功"><a href="#Step4-测试是否添加成功" class="headerlink" title="Step4. 测试是否添加成功"></a>Step4. 测试是否添加成功</h3><p>在 <code>Git Bush</code> 中输入下面的代码，然后回车<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>ssh -T git<span class="variable">@GitHub</span>.com</span><br><span class="line"><span class="comment"># Attempts to ssh to GitHub</span></span><br></pre></td></tr></table></figure></p>
+<p>会得到如下的指纹提示：键入<code>yes</code><br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">The authenticity <span class="keyword">of</span> host <span class="comment">'GitHub.com (207.97.227.239)' can't be established.</span></span><br><span class="line">RSA <span class="keyword">key</span> fingerprint <span class="keyword">is</span> <span class="number">16</span>:<span class="number">27</span>:ac:a5:<span class="number">76</span>:<span class="number">28</span>:<span class="number">2</span>d:<span class="number">36</span>:<span class="number">63</span>:<span class="number">1</span>b:<span class="number">56</span>:<span class="number">4</span>d:eb:df:a6:<span class="number">48.</span></span><br><span class="line">Are you sure you want <span class="keyword">to</span> <span class="keyword">continue</span> connecting (yes/no)?</span><br></pre></td></tr></table></figure></p>
+<p>如果出现下面的提示，恭喜你，验证成功。<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hi username! You've successfully authenticated, <span class="keyword">but</span> GitHub <span class="keyword">does</span> <span class="keyword">not</span> provide shell access.</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>如果你看到的是 <code>access denied(拒绝访问)</code> ，可以<a href="https://help.GitHub.com/articles/error-permission-denied-publickey" target="_blank" rel="external">点击这里</a> ，查看解决办法。  </p>
+</blockquote>
+<p>然后将https替换成ssh重新下载下代码，就OK了~~~</p>
+<p><strong><em>Good Luck</em></strong>  </p>
+<p><strong> 参考文档 </strong></p>
+<ol>
+<li><a href="https://help.GitHub.com/articles/generating-ssh-keys/" target="_blank" rel="external">Generating SSH keys</a> </li>
+</ol>
+<hr>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/GitHub/" rel="tag">#GitHub</a>
+          
+            <a href="/tags/SSH-Key/" rel="tag">#SSH Key</a>
+          
+            <a href="/tags/免密码/" rel="tag">#免密码</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/html-meta/" rel="next" title="常用Meta整理">
+                <i class="fa fa-chevron-left"></i> 常用Meta整理
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/generating-ssh-key/"
+           data-title="生成 SSH Key 免密码提交 GitHub" data-url="https://ioliu.cn/2015/generating-ssh-key/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.png"
+               alt="云淡风轻" />
+          <p class="site-author-name" itemprop="name">云淡风轻</p>
+          <p class="site-description motion-element" itemprop="description">隐约雷鸣，阴霾天空，但盼风雨来，能留你在此</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/eary" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/1842336184" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:mail@xone.me" target="_blank" title="Email">
+                  
+                    <i class="fa fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://api.ioliu.cn" target="_blank" title="壁纸">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  壁纸
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Step1-检查是否已经存在-SSH-Key"><span class="nav-number">1.</span> <span class="nav-text">Step1. 检查是否已经存在 SSH Key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step2-生成-SSH-Key"><span class="nav-number">2.</span> <span class="nav-text">Step2. 生成 SSH Key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step3-添加-SSH-Key-到-GitHub"><span class="nav-number">3.</span> <span class="nav-text">Step3. 添加 SSH Key 到 GitHub</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step4-测试是否添加成功"><span class="nav-number">4.</span> <span class="nav-text">Step4. 测试是否添加成功</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2013 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">云淡风轻</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ioliu"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("R9cQjqaD9AXPKY7AQiU6U6yl", "YHUU5n9sbvpRQCdiIU8aRsmH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>
