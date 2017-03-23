@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://ioliu.cn/2017/add-a-lock-to-your-website/</loc>
+    
+    <lastmod>2017-03-23T01:09:26.650Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://ioliu.cn/categories/index.html</loc>
     
     <lastmod>2017-03-22T02:07:08.384Z</lastmod>
@@ -12,13 +19,6 @@
     <loc>http://ioliu.cn/tags/index.html</loc>
     
     <lastmod>2017-03-22T02:06:58.010Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://ioliu.cn/2017/add-a-lock-to-your-website/</loc>
-    
-    <lastmod>2017-03-22T02:03:36.645Z</lastmod>
     
   </url>
   
